@@ -14,8 +14,8 @@ namespace UnitTests
     internal class PersonServiceTests
     {
         private string apiEndpoint = "https://localhost:44372/api/Person";
-        private string validPersonJson = "{\"id\":1,\"firstName\":\"Theo\",\"lastName\":\"Hodges\",\"dateOfBirth\":\"2001-02-21T00:00:00\",\"placeOfBirth\":\"Sutton\",\"gender\":\"Male\",\"married\":false}";
-        private Person validPerson = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(2001, 2, 21), PlaceOfBirth = "Sutton", Gender = "Male", Married = false };
+        private string validPersonJson = "{\"id\":1,\"firstName\":\"Theo\",\"lastName\":\"Hodges\",\"dateOfBirth\":\"1970-01-01T00:00:00\",\"placeOfBirth\":\"London\",\"gender\":\"Male\",\"married\":false}";
+        private Person validPerson = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(1970, 1, 1), PlaceOfBirth = "London", Gender = "Male", Married = false };
 
         private PersonService SystemUnderTest;
         private IHttpClientHandler httpClientHandler;

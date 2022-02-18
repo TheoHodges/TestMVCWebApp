@@ -17,8 +17,8 @@ namespace TestAPI.Data
 
             var people = new Person[]
             {
-                new Person{FirstName="Theo",LastName="Hodges",DateOfBirth=new System.DateTime(2001, 2, 21),PlaceOfBirth="Sutton",Gender="Male",Married=false},
-                new Person{FirstName="Ellie",LastName="Wilcockson",DateOfBirth=new System.DateTime(2000, 9, 21),PlaceOfBirth="Derby",Gender="Female",Married=false}
+                new Person{FirstName="Theo",LastName="Hodges",DateOfBirth=new System.DateTime(1970, 1, 1),PlaceOfBirth="London",Gender="Male",Married=false},
+                new Person{FirstName="Jane",LastName="Smith",DateOfBirth=new System.DateTime(2000, 1, 1),PlaceOfBirth="New York",Gender="Female",Married=false}
             };
             foreach (Person person in people)
             {

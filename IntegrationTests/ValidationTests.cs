@@ -64,7 +64,7 @@ namespace IntegrationTests
         {
             using (var httpClient = WebAppFactoryObj.CreateClient())
             {
-                var person = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(2001, 2, 21), PlaceOfBirth = "Sutton", Gender = "Male", Married = false };
+                var person = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(1970, 1, 1), PlaceOfBirth = "London", Gender = "Male", Married = false };
                 var content = new StringContent(JsonConvert.SerializeObject(person));
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 var response = await httpClient.PostAsync("api/Person", content);
