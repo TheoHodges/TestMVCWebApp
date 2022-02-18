@@ -7,10 +7,11 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="w3-button w3-indigo">Create New</a>
 </p>
-<table class="w3-table">
-    <thead>
+<table class="w3-table wco-table-responsive">
+    <caption>Person list</caption>
+    <thead class="wco-table-responsive__heading">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
@@ -30,7 +31,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Married)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -52,12 +52,10 @@
                 @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Married)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @{ 
+                    string marriedText = item.Married ? "Yes" : "No";
+                }
+                @Html.DisplayFor(modelItem => marriedText)
             </td>
         </tr>
 }
