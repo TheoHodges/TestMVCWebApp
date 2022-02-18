@@ -46,30 +46,5 @@ namespace IntegrationTests
                 Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
             }
         }
-
-        [Test]
-        public async Task Returns_bad_request_if_invalid_model()
-        {
-            using (var httpClient = WebAppFactoryObj.CreateClient())
-            {
-                var content = new StringContent(JsonConvert.SerializeObject(new Person()));
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var response = await httpClient.PostAsync("api/Person", content);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            }
-        }
-
-        [Test]
-        public async Task Returns_created_if_valid_model()
-        {
-            using (var httpClient = WebAppFactoryObj.CreateClient())
-            {
-                var person = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(1970, 1, 1), PlaceOfBirth = "London", Gender = "Male", Married = false };
-                var content = new StringContent(JsonConvert.SerializeObject(person));
-                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                var response = await httpClient.PostAsync("api/Person", content);
-                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
-            }
-        }
     }
 }
