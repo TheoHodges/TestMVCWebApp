@@ -11,17 +11,24 @@ using TestAPI.Data;
 using TestAPI.Models;
 using TestAPI.Repositories;
 
-namespace IntegrationTests
+namespace UnitTests
 {
     internal class PersonControllerTests
     {
+        private PersonController SystemUnderTest;
+        private IPersonRepository mockPersonRepository;
+
+        [SetUp]
+        public void SetUp()
+        {
+            mockPersonRepository = Substitute.For<IPersonRepository>();
+            SystemUnderTest = new PersonController(mockPersonRepository);
+        }
+
         [Test]
         public void ValidateAgeNegativeReturnsBadRequest()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
-            PersonController controller = new PersonController(mockPersonRepository);
-
-            var result = controller.ValidateAge(-2);
+            var result = SystemUnderTest.ValidateAge(-2);
 
             Assert.IsInstanceOf<BadRequestObjectResult>(result);
             BadRequestObjectResult result2 = (BadRequestObjectResult)result;
@@ -31,10 +38,7 @@ namespace IntegrationTests
         [Test]
         public void ValidateAgeZeroReturnsOk()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
-            PersonController controller = new PersonController(mockPersonRepository);
-
-            var result = controller.ValidateAge(0);
+            var result = SystemUnderTest.ValidateAge(0);
 
             Assert.IsInstanceOf<OkObjectResult>(result);
         }
@@ -42,10 +46,7 @@ namespace IntegrationTests
         [Test]
         public void ValidateAgePositiveReturnsOk()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
-            PersonController controller = new PersonController(mockPersonRepository);
-
-            var result = controller.ValidateAge(1);
+            var result = SystemUnderTest.ValidateAge(1);
 
             Assert.IsInstanceOf<OkObjectResult>(result);
         }
@@ -53,10 +54,7 @@ namespace IntegrationTests
         [Test]
         public void NewPersonTest()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
-            PersonController controller = new PersonController(mockPersonRepository);
-
-            var result = controller.NewPerson();
+            var result = SystemUnderTest.NewPerson();
 
             Assert.IsInstanceOf<OkObjectResult>(result);
         }
@@ -64,12 +62,10 @@ namespace IntegrationTests
         [Test]
         public void GetAllPeopleCallsPersonRepository()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
             var expected = Enumerable.Empty<Person>();
             mockPersonRepository.GetAllPeople().Returns(expected);
-            PersonController controller = new PersonController(mockPersonRepository);
 
-            var result = controller.GetAllPeople();
+            var result = SystemUnderTest.GetAllPeople();
 
             mockPersonRepository.Received().GetAllPeople();
             Assert.IsInstanceOf<OkObjectResult>(result.Result);
@@ -80,12 +76,10 @@ namespace IntegrationTests
         [Test]
         public void GetPersonInvalidIdReturnsNotFound()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
             Person expected = null;
             mockPersonRepository.GetPersonByID(-2).Returns(expected);
-            PersonController controller = new PersonController(mockPersonRepository);
 
-            var result = controller.GetPerson(-2);
+            var result = SystemUnderTest.GetPerson(-2);
 
             mockPersonRepository.Received().GetPersonByID(-2);
             Assert.IsInstanceOf<NotFoundResult>(result.Result);
@@ -94,12 +88,10 @@ namespace IntegrationTests
         [Test]
         public void GetPersonValidIdReturnsPerson()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
             Person expected = new Person();
             mockPersonRepository.GetPersonByID(1).Returns(expected);
-            PersonController controller = new PersonController(mockPersonRepository);
 
-            var result = controller.GetPerson(1);
+            var result = SystemUnderTest.GetPerson(1);
 
             mockPersonRepository.Received().GetPersonByID(1);
             Assert.AreEqual(expected, result.Value);
@@ -108,11 +100,9 @@ namespace IntegrationTests
         [Test]
         public void CreateWithValidModelReturnsCreated()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
             Person person = new Person();
-            PersonController controller = new PersonController(mockPersonRepository);
 
-            var result = controller.Create(person);
+            var result = SystemUnderTest.Create(person);
 
             mockPersonRepository.Received().InsertPerson(person);
             mockPersonRepository.Received().Save();
@@ -122,12 +112,10 @@ namespace IntegrationTests
         [Test]
         public void CreateWithInvalidModelReturnsBadRequest()
         {
-            IPersonRepository mockPersonRepository = Substitute.For<IPersonRepository>();
             Person person = new Person();
-            PersonController controller = new PersonController(mockPersonRepository);
-            controller.ModelState.AddModelError("fakeError", "fakeError");
+            SystemUnderTest.ModelState.AddModelError("fakeError", "fakeError");
 
-            var result = controller.Create(person);
+            var result = SystemUnderTest.Create(person);
 
             Assert.IsInstanceOf<BadRequestResult>(result);
         }

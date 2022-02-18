@@ -13,7 +13,7 @@ using TestApp.Controllers;
 using TestApp.Models;
 using TestApp.Services;
 
-namespace IntegrationTests
+namespace UnitTests
 {
     internal class HomeControllerTests
     {
@@ -21,17 +21,26 @@ namespace IntegrationTests
         private Person validPerson = new Person { FirstName = "Theo", LastName = "Hodges", DateOfBirth = new System.DateTime(2001, 2, 21), PlaceOfBirth = "Sutton", Gender = "Male", Married = false };
         private Person invalidPerson = new Person { FirstName = "Theo", DateOfBirth = new System.DateTime(2001, 2, 21), PlaceOfBirth = "Sutt99on", Gender = "Male", Married = false };
 
+        private HomeController SystemUnderTest;
+        private IPersonService service;
+        private HttpResponseMessage res;
+
+        [SetUp]
+        public void SetUp()
+        {
+            service = Substitute.For<IPersonService>();
+            res = new HttpResponseMessage();
+            SystemUnderTest = new HomeController(service);
+        }
+
         [Test]
         public void IndexActionCallsServiceGet()
         {
-            IPersonService service = Substitute.For<IPersonService>();
-            HttpResponseMessage res = new HttpResponseMessage();
             res.StatusCode = (System.Net.HttpStatusCode)200;
             res.Content = new StringContent(validPersonJson);
             service.GetPeople().Returns(res);
-            HomeController controller = new HomeController(service);
 
-            _ = controller.Index();
+            _ = SystemUnderTest.Index();
 
             service.Received().GetPeople();
         }
@@ -39,13 +48,10 @@ namespace IntegrationTests
         [Test]
         public void CreateActionCallsServicePostWhenModelIsValid()
         {
-            IPersonService service = Substitute.For<IPersonService>();
-            HttpResponseMessage res = new HttpResponseMessage();
             res.StatusCode = (System.Net.HttpStatusCode)201;
             service.PostPerson(validPerson).Returns(res);
-            HomeController controller = new HomeController(service);
 
-            _ = controller.Create(validPerson);
+            _ = SystemUnderTest.Create(validPerson);
             
             service.Received().PostPerson(validPerson);
         }
@@ -53,14 +59,11 @@ namespace IntegrationTests
         [Test]
         public void CreateActionDoesNotCallServiceWhenModelIsInvalid()
         {
-            IPersonService service = Substitute.For<IPersonService>();
-            HttpResponseMessage res = new HttpResponseMessage();
             res.StatusCode = (System.Net.HttpStatusCode)201;
             service.PostPerson(invalidPerson).Returns(res);
-            HomeController controller = new HomeController(service);
-            controller.ModelState.AddModelError("fakeError", "fakeError");
+            SystemUnderTest.ModelState.AddModelError("fakeError", "fakeError");
 
-            _ = controller.Create(invalidPerson);
+            _ = SystemUnderTest.Create(invalidPerson);
 
             service.DidNotReceive().PostPerson(invalidPerson);
         }
