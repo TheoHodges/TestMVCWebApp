@@ -29,6 +29,7 @@ namespace TestApp
                 options.HtmlHelperOptions.ClientValidationEnabled = true;
             });
             services.AddRazorPages();
+            // Dependency injection - creates an instance of the concrete implementation class when needed and uses that
             services.AddScoped<IHttpClientHandler, HttpClientHandler>();
             services.AddScoped<IPersonService, PersonService>();
         }
